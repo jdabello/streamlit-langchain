@@ -373,11 +373,14 @@ if question := st.chat_input(lang_dict['assistant_question']):
         })
         print(f"Using inputs: {inputs}")
 
-        chain = inputs | prompt | model
+        chain = (inputs | prompt | model).with_config({"tags": [f"{st.session_state.user}"]})
         print(f"Using chain: {chain}")
 
         # Call the chain and stream the results into the UI
-        response = chain.invoke({'question': question, 'chat_history': history}, config={'callbacks': [StreamHandler(response_placeholder)]})
+        response = chain.invoke(
+            {'question': question, 'chat_history': history}, 
+            config={'callbacks': [StreamHandler(response_placeholder)]}
+        )
         print(f"Response: {response}")
         content = response.content
 
