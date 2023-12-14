@@ -197,8 +197,8 @@ def load_vectorstore(username):
     return AstraDB(
         embedding=embedding,
         collection_name=f"vector_context_{username}",
-        token=st.secrets["ASTRA_TOKEN"],
-        api_endpoint=os.environ["ASTRA_ENDPOINT"],
+        token=st.secrets.astra_tokens[f"{username}"],
+        api_endpoint=st.secrets.astra_endpoints[f"{username}"],
     )
     
 # Cache Retriever for future runs
@@ -228,8 +228,8 @@ def load_chat_history(username):
     print(f"load_chat_history for {username}_{st.session_state.session_id}")
     return AstraDBChatMessageHistory(
         session_id=f"{username}_{st.session_state.session_id}",
-        api_endpoint=os.environ["ASTRA_ENDPOINT"],
-        token=st.secrets["ASTRA_TOKEN"],
+        api_endpoint=st.secrets.chat_history["ASTRA_VECTOR_ENDPOINT"],
+        token=st.secrets.chat_history["ASTRA_VECTOR_TOKEN"],
     )
 
 @st.cache_resource(show_spinner=lang_dict['load_message_history'])
